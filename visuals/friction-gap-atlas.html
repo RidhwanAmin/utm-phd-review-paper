@@ -1,0 +1,717 @@
+<title>Friction Gap Atlas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column (~68ch) for the argument; figures widen to a 1040px plate. Four parts run in order: context → current work → what is lacking → how the review closes it. */
+:root {
+  --bg: #f6f7f8;
+  --panel: #ffffff;
+  --fg: #13171b;
+  --fg-2: #4a525a;
+  --muted: #7f878e;
+  --line: #e1e4e7;
+  --axis: #c2c8cd;
+  --s1: #2a78d6;          /* categorical slot 1: robots / force gloves / everything else */
+  --s2: #eb6834;          /* categorical slot 2: the gap - wearables, kirigami, friction route */
+  --seq0: #eef0f2;
+  --seq-lo: #cde2fb;
+  --seq-hi: #184f95;
+  --zone: rgba(235, 104, 52, 0.09);
+  --zone-line: rgba(235, 104, 52, 0.55);
+  --ring: rgba(19, 23, 27, 0.12);
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1012; --panel: #16191c; --fg: #eef0f2; --fg-2: #b8bfc5; --muted: #858c92;
+    --line: #262a2e; --axis: #3b4146; --s1: #3987e5; --s2: #d95926;
+    --seq0: #1e2226; --seq-lo: #16365e; --seq-hi: #86b6ef;
+    --zone: rgba(217, 89, 38, 0.13); --zone-line: rgba(217, 89, 38, 0.6); --ring: rgba(255,255,255,0.12);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1012; --panel: #16191c; --fg: #eef0f2; --fg-2: #b8bfc5; --muted: #858c92;
+  --line: #262a2e; --axis: #3b4146; --s1: #3987e5; --s2: #d95926;
+  --seq0: #1e2226; --seq-lo: #16365e; --seq-hi: #86b6ef;
+  --zone: rgba(217, 89, 38, 0.13); --zone-line: rgba(217, 89, 38, 0.6); --ring: rgba(255,255,255,0.12);
+  color-scheme: dark;
+}
+
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 40px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 56px; }
+.prose { max-width: 68ch; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2.1rem, 5vw, 3.2rem); font-weight: 800; font-stretch: 85%; line-height: 1.02; }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 750; font-stretch: 88%; line-height: 1.1; }
+h3 { font-size: 1.2rem; font-weight: 650; font-stretch: 95%; line-height: 1.25; }
+p { margin: 0; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-2); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.lede { font-size: 1.125rem; color: var(--fg-2); }
+header.hero { display: grid; gap: 18px; }
+.hero .formula { font-family: var(--font-mono); font-size: 14px; color: var(--fg-2); border-left: 2px solid var(--s2); padding: 4px 0 4px 12px; }
+.formula b { color: var(--fg); font-weight: 500; }
+
+.guide { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.guide a { display: grid; gap: 4px; padding: 14px 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; color: inherit; text-decoration: none; }
+.guide a:hover, .guide a:focus-visible { border-color: var(--fg-2); }
+.guide .n { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.guide .q { font-weight: 600; }
+.guide .a { font-size: 14px; color: var(--fg-2); }
+
+.legend-ev { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--fg-2); }
+.chip { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; padding: 1px 7px; border-radius: 3px; border: 1px solid var(--axis); color: var(--fg); background: var(--panel); white-space: nowrap; }
+
+section.part { display: grid; gap: 32px; }
+.part-head { display: grid; gap: 10px; padding-top: 28px; border-top: 2px solid var(--fg); }
+.part-head .eyebrow b { color: var(--fg); font-weight: 500; }
+
+figure { margin: 0; display: grid; gap: 14px; padding: 22px clamp(14px, 2.5vw, 26px); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; min-width: 0; }
+figure > * { min-width: 0; }
+figcaption { display: grid; gap: 6px; }
+.insight { font-size: 15px; color: var(--fg-2); max-width: 75ch; }
+.insight strong { color: var(--fg); font-weight: 600; }
+.notes { font-size: 12.5px; color: var(--muted); max-width: 90ch; line-height: 1.5; }
+.chart { width: 100%; min-width: 0; position: relative; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart svg text { font-family: var(--font-body); }
+.keys { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--fg-2); align-items: center; }
+.key { display: inline-flex; align-items: center; gap: 7px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex: none; }
+.sw.dot { border-radius: 50%; }
+.sw.hollow { background: transparent !important; border: 2px solid; }
+
+.split { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+@media (max-width: 760px) { .split { grid-template-columns: minmax(0, 1fr); } }
+.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; }
+.stat { display: grid; gap: 2px; }
+.stat .v { font-family: var(--font-display); font-weight: 750; font-stretch: 80%; font-size: 1.9rem; line-height: 1.05; }
+.stat .l { font-size: 13px; color: var(--fg-2); }
+
+details.tv { font-size: 13px; color: var(--fg-2); }
+details.tv summary { cursor: pointer; font-family: var(--font-mono); font-size: 12px; color: var(--fg-2); width: fit-content; }
+details.tv summary:focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; }
+.tscroll { overflow-x: auto; margin-top: 10px; }
+table.data { border-collapse: collapse; font-size: 13px; width: 100%; font-variant-numeric: tabular-nums; }
+table.data th, table.data td { text-align: left; padding: 5px 10px 5px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.data th { color: var(--fg); font-weight: 600; }
+
+/* Matrix tables (heatmap, scorecard, gap matrix) */
+.mscroll { overflow-x: auto; }
+table.matrix { border-collapse: separate; border-spacing: 3px; font-size: 13px; width: 100%; min-width: 560px; }
+table.matrix th { font-weight: 600; color: var(--fg); text-align: left; vertical-align: bottom; padding: 4px 6px; font-size: 12.5px; line-height: 1.3; }
+table.matrix th.row { vertical-align: middle; white-space: nowrap; padding-right: 10px; }
+table.matrix th .sub { display: block; font-weight: 400; color: var(--muted); font-size: 11.5px; white-space: normal; }
+table.matrix td { text-align: center; height: 40px; border-radius: 4px; font-variant-numeric: tabular-nums; font-weight: 600; cursor: default; }
+table.matrix td:focus-visible { outline: 2px solid var(--fg); outline-offset: 1px; }
+table.matrix td.hl { box-shadow: inset 0 0 0 2px var(--s2); }
+table.matrix th.hl { color: var(--fg); }
+table.matrix th.hl::after { content: ""; display: block; height: 3px; background: var(--s2); margin-top: 6px; border-radius: 2px; }
+td.unk { background-image: repeating-linear-gradient(135deg, transparent 0 5px, var(--ring) 5px 6px); }
+.mk { font-size: 18px; line-height: 1; }
+
+#tip { position: fixed; z-index: 20; pointer-events: none; background: var(--panel); color: var(--fg); border: 1px solid var(--axis); border-radius: 6px; padding: 8px 10px; font-size: 13px; max-width: 280px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+#tip .tv { font-weight: 600; }
+#tip .tl { color: var(--fg-2); }
+
+.close { display: grid; gap: 14px; }
+.close ol { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
+.close li::marker { font-family: var(--font-mono); color: var(--muted); }
+footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
+a { color: var(--s1); }
+@media (prefers-reduced-motion: no-preference) { .guide a { transition: border-color .15s; } }
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Review groundwork · wearable grasp assistance</div>
+    <h1>Friction Gap Atlas</h1>
+    <p class="lede prose">Assistive gloves mostly try to squeeze harder. A glove can also stop objects slipping by raising friction at the contact. This atlas maps what is known about five ways of doing that (suction, jamming, adhesion, electroadhesion and kirigami), where the evidence runs out, and what the review will deliver.</p>
+    <p class="formula">Two-finger hold: <b>N = m·g / (2μ) × (1 + SM)</b>. Squeeze force N falls as friction μ rises.</p>
+    <nav class="guide" aria-label="Parts of the atlas">
+      <a href="#context"><span class="n">Part 1 · Fig 1–2</span><span class="q">Context</span><span class="a">Who needs grasp help, and why friction is a lever</span></a>
+      <a href="#current"><span class="n">Part 2 · Fig 3–5</span><span class="q">Current work</span><span class="a">What devices do and where research effort sits</span></a>
+      <a href="#lacking"><span class="n">Part 3 · Fig 6–7</span><span class="q">What is lacking</span><span class="a">Why the evidence cannot yet rank mechanisms for a glove</span></a>
+      <a href="#review"><span class="n">Part 4 · Fig 8</span><span class="q">How the review closes it</span><span class="a">Which part of the review answers which gap</span></a>
+    </nav>
+    <div class="legend-ev"><span><span class="chip">R</span> reported in a paper abstract</span><span><span class="chip">D</span> derived by us from reported values or physics</span><span><span class="chip">J</span> our preliminary judgment, to be replaced by formal extraction</span><span><span class="chip">S</span> count from our search sample, not a field total</span></div>
+  </header>
+
+  <!-- PART 1 -->
+  <section class="part" id="context">
+    <div class="part-head">
+      <div class="eyebrow"><b>Part 1</b> Context</div>
+      <h2>Grasping fails when friction runs short</h2>
+      <p class="prose insight">Hand impairment is common, and a weak or ageing hand loses grip partly because contact friction becomes less reliable. Raising friction directly reduces the force a glove has to supply.</p>
+    </div>
+
+    <figure>
+      <figcaption>
+        <div class="eyebrow">Fig 1 · The need <span class="chip">R</span></div>
+        <h3>About 40–50 of every 100 stroke survivors live with a chronically impaired arm and hand</h3>
+      </figcaption>
+      <div class="split">
+        <div class="chart" id="c-waffle" role="img" aria-label="Unit chart of 100 stroke survivors: 40 to 50 have chronic upper-limb impairment."></div>
+        <div style="display:grid; gap:22px;">
+          <div class="stats">
+            <div class="stat"><span class="v">93.8 M</span><span class="l">people living after stroke worldwide (2021)</span></div>
+            <div class="stat"><span class="v">55–75%</span><span class="l">of survivors have motor dysfunction; ≈85% of those in the upper limb</span></div>
+            <div class="stat"><span class="v">36% vs 0%</span><span class="l">of lifts dropped with numbed vs intact fingertips</span></div>
+            <div class="stat"><span class="v">10–40%</span><span class="l">grip-force safety margin people keep above the slip force</span></div>
+          </div>
+          <div class="chart" id="c-age" role="img" aria-label="Bar chart: older adults use about twice the grip force of young adults."></div>
+        </div>
+      </div>
+      <div class="keys">
+        <span class="key"><span class="sw" style="background:var(--s2)"></span>Chronic upper-limb impairment (lower bound, 40)</span>
+        <span class="key"><span class="sw" style="background:var(--s2); opacity:.4"></span>Up to the upper bound (50)</span>
+        <span class="key"><span class="sw" style="background:var(--seq0); box-shadow: inset 0 0 0 1px var(--axis)"></span>Other survivors</span>
+      </div>
+      <p class="notes">Sources: Feigin et al. 2024 (Lancet Neurol); Tang et al. 2024 (Front Neurol); Krumina et al. 2025 (JMIR RAT); Cole 1991 (J Motor Behav); Augurelle et al. 2003 (J Neurophysiol); Islek &amp; Ozbay 2021 (IJARS). The older-adult bar comes from a precision-grip lift study; skin slipperiness starts rising from about age 50 (Cole et al. 1999).</p>
+    </figure>
+
+    <figure>
+      <figcaption>
+        <div class="eyebrow">Fig 2 · Friction is a lever <span class="chip">D</span> <span class="chip">R</span></div>
+        <h3>Raising friction from μ 0.3 to 0.8 cuts the squeeze needed by 62%</h3>
+        <p class="insight">Required force per finger to hold a <strong>0.5 kg</strong> object in a two-finger pinch with a 30% safety margin. The shaded band is the assist force that force-actuated gloves report. At low friction the requirement climbs toward what those gloves can supply. With more friction, a weak hand or a light glove is enough.</p>
+      </figcaption>
+      <div class="chart" id="c-lever" role="img" aria-label="Line chart of required grip force against friction coefficient, falling from about 21 newtons at mu 0.15 to 1.6 newtons at mu 2."></div>
+      <details class="tv"><summary>Show data table</summary><div class="tscroll" id="t-lever"></div></details>
+      <p class="notes">The curve is a Coulomb-friction model, not a measurement, and its μ values are illustrative. Glove forces come from In et al. 2015 (20 N pinch), Popov et al. 2017 (16 N pinch), Suulker et al. 2024 (15.8 N mean finger assistance) and Zhang et al. 2025 (2.34 N fingertip).</p>
+    </figure>
+  </section>
+
+  <!-- PART 2 -->
+  <section class="part" id="current">
+    <div class="part-head">
+      <div class="eyebrow"><b>Part 2</b> Current work</div>
+      <h2>Gloves add force and mass, and friction research stays on robots</h2>
+      <p class="prose insight">Force-actuated gloves work in clinical tests, but complete systems are heavy. The friction mechanisms that could lighten them are developed mostly on robot grippers and crawlers, and reach the hand years later or not at all.</p>
+    </div>
+
+    <figure>
+      <figcaption>
+        <div class="eyebrow">Fig 3 · Device mass <span class="chip">R</span></div>
+        <h3>Complete force-glove systems weigh 335–562 g; several friction and adhesion wearables are under 75 g</h3>
+        <p class="insight">Hollow markers are weights that leave out the pump, motor or battery pack. The pneumatic gloves look lightest only because their actuation is not counted.</p>
+      </figcaption>
+      <div class="chart" id="c-mass" role="img" aria-label="Dot plot of wearable device mass in grams, comparing force-actuated gloves with friction and adhesion wearables."></div>
+      <div class="keys">
+        <span class="key"><span class="sw dot" style="background:var(--s1)"></span>Force-actuated glove</span>
+        <span class="key"><span class="sw dot" style="background:var(--s2)"></span>Friction, adhesion or stiffness wearable</span>
+        <span class="key"><span class="sw dot hollow" style="border-color:var(--fg-2)"></span>Partial weight (actuation excluded)</span>
+      </div>
+      <details class="tv"><summary>Show data table</summary><div class="tscroll" id="t-mass"></div></details>
+      <p class="notes">Sources: Gerez 2019; Sui 2023; Kim 2025 (Exo-Glove Poly III); Popov 2017; Chizhik 2021; In 2015; Chen 2025; Yi 2017; Choi 2020; Wang 2023; Zuo 2022; Xiong 2022; Wang 2025. Yi 2017 is reported as "&lt;50 g" and is plotted at 50 g. Two of the orange devices are wrist supports and one is a haptic glove, so they are included as mass references, not as grasp aids.</p>
+    </figure>
+
+    <figure>
+      <figcaption>
+        <div class="eyebrow">Fig 4 · Where effort sits <span class="chip">S</span></div>
+        <h3>Most papers target robot grippers; the hand grasp-assist column is thin and empty for kirigami</h3>
+        <p class="insight">Each cell counts papers in our 15-search sample by mechanism and application. Read the cells against each other, not as totals for the field.</p>
+      </figcaption>
+      <div class="mscroll"><table class="matrix" id="m-cover"></table></div>
+      <div class="keys"><span class="key"><span class="sw" style="background:linear-gradient(90deg,var(--seq-lo),var(--seq-hi)); width:56px"></span>1 → 13 papers</span><span class="key"><span class="sw" style="background:var(--seq0); box-shadow: inset 0 0 0 1px var(--axis)"></span>0 papers</span><span class="key"><span class="sw" style="box-shadow: inset 0 0 0 2px var(--s2)"></span>Review focus: grasp-assist hand wearable</span></div>
+      <p class="notes">A Scopus / Web of Science search will replace these counts. The papers assigned to each cell are listed in <code>review-landscape-visual-data.md</code>.</p>
+    </figure>
+
+    <figure>
+      <figcaption>
+        <div class="eyebrow">Fig 5 · Timeline <span class="chip">S</span></div>
+        <h3>Every mechanism starts on robots; hand grasp aids follow 3–9 years later, and kirigami has not crossed over</h3>
+      </figcaption>
+      <div class="chart" id="c-time" role="img" aria-label="Timeline of papers per mechanism by year, split into robot work, other human-worn devices and hand grasp-assist wearables."></div>
+      <div class="keys">
+        <span class="key"><span class="sw dot" style="background:var(--s1)"></span>Robot gripper or locomotion</span>
+        <span class="key"><span class="sw dot hollow" style="border-color:var(--s2)"></span>Other human-worn (haptics, wrist, shoe, climbing)</span>
+        <span class="key"><span class="sw dot" style="background:var(--s2)"></span>Hand grasp-assist wearable</span>
+      </div>
+      <details class="tv"><summary>Show data table</summary><div class="tscroll" id="t-time"></div></details>
+      <p class="notes">The lag is measured from the first robot paper to the first hand grasp-assist paper in our sample. Each dot is one paper; dots in the same year stack.</p>
+    </figure>
+  </section>
+
+  <!-- PART 3 -->
+  <section class="part" id="lacking">
+    <div class="part-head">
+      <div class="eyebrow"><b>Part 3</b> What is lacking</div>
+      <h2>No common yardstick, and the controllable options carry the hardware</h2>
+      <p class="prose insight">Each mechanism reports its success in a different unit, so they cannot be ranked for a glove. When they are scored against what a wearer needs, the mechanisms that switch on demand are the ones that bring back pumps, heaters and high voltage.</p>
+    </div>
+
+    <figure>
+      <figcaption>
+        <div class="eyebrow">Fig 6 · Metric fragmentation <span class="chip">R</span> <span class="chip">D</span></div>
+        <h3>Headline gains span 1.4× to 2000×, but they measure five different things</h3>
+        <p class="insight">Only the kirigami studies and one glove report friction itself. Switching ratios, stiffness ratios and force gains cannot be compared with each other, and no study normalises by grams added or watts drawn.</p>
+      </figcaption>
+      <div class="chart" id="c-metric" role="img" aria-label="Dot plot on a log scale of reported performance ratios grouped by metric type."></div>
+      <div class="keys">
+        <span class="key"><span class="sw dot" style="background:var(--s2)"></span>Kirigami</span>
+        <span class="key"><span class="sw dot" style="background:var(--s1)"></span>Other mechanisms and reference glove</span>
+      </div>
+      <details class="tv"><summary>Show data table</summary><div class="tscroll" id="t-metric"></div></details>
+      <p class="notes">Ratios are as reported or computed from reported pairs (for example 35 / 6.8 kPa = 5.1×). Sources: Chen 2019, 2021; Cacucciolo 2021; Rosle 2024; Wang 2023, 2025; Zhu 2026; Tian 2019; Li 2021; Luo 2022; Mazzolai 2019; He 2026; Frey 2022; Wei 2016; Zuo 2022; Gao 2019; Branyan 2020, 2022; Liefferink 2021; Lai 2023.</p>
+    </figure>
+
+    <figure>
+      <figcaption>
+        <div class="eyebrow">Fig 7a · Wearability scorecard <span class="chip">J</span></div>
+        <h3>No mechanism is strong across the board, and kirigami's blanks are untested rather than weak</h3>
+        <p class="insight">Each mechanism is scored 1–3 against seven needs of a hand wearable; hatched cells mean no evidence yet. Hover or focus a cell to see the reasoning.</p>
+      </figcaption>
+      <div class="mscroll"><table class="matrix" id="m-score"></table></div>
+      <div class="keys"><span class="key"><span class="sw" style="background:linear-gradient(90deg,var(--seq-lo),var(--seq-hi)); width:56px"></span>1 weak → 3 strong</span><span class="key"><span class="sw unk" style="background-color:var(--seq0); box-shadow: inset 0 0 0 1px var(--axis)"></span>? no evidence or unknown</span></div>
+      <p class="notes">These are preliminary ratings made from abstracts to frame the review. The review's benchmark table (contribution C2) replaces them with extracted values.</p>
+    </figure>
+
+    <figure>
+      <figcaption>
+        <div class="eyebrow">Fig 7b · Positioning map <span class="chip">D</span></div>
+        <h3>The controllable mechanisms carry the most hardware; the bulk-free, controllable corner is nearly empty</h3>
+        <p class="insight">Burden combines the power and added-hardware scores; controllability is the switching score, both from Fig 7a. Kirigami and dry adhesion sit in the low-burden zone. Electroadhesion is on the edge, and its position depends on low-voltage designs maturing.</p>
+      </figcaption>
+      <div class="chart" id="c-map" role="img" aria-label="Scatter plot of mechanisms by hardware burden and controllability, with a target zone for low burden and high control."></div>
+      <details class="tv"><summary>Show data table</summary><div class="tscroll" id="t-map"></div></details>
+      <p class="notes">Burden = 3 − mean(power-free, low added hardware). Points with equal scores are nudged slightly apart so both stay visible. The scores rest on the ratings in Fig 7a.</p>
+    </figure>
+  </section>
+
+  <!-- PART 4 -->
+  <section class="part" id="review">
+    <div class="part-head">
+      <div class="eyebrow"><b>Part 4</b> How the review closes it</div>
+      <h2>Each gap gets a primary answer from at least one part of the review</h2>
+    </div>
+
+    <figure>
+      <figcaption>
+        <div class="eyebrow">Fig 8 · Gap × contribution</div>
+        <h3>The benchmark and the roadmap carry the most weight; the kirigami analysis answers the one gap nobody else covers</h3>
+        <p class="insight">● is the primary answer to a gap and ○ is supporting. Read across a row to see how a gap is closed, or down a column to see what a section must deliver.</p>
+      </figcaption>
+      <div class="mscroll"><table class="matrix" id="m-gap"></table></div>
+    </figure>
+
+    <div class="close prose">
+      <h3>What the review will add</h3>
+      <ol>
+        <li><strong>A shared map.</strong> A passive/active taxonomy organised by contact physics (interlocking, van der Waals, pressure difference, electrostatic, stiffness), replacing five separate literatures.</li>
+        <li><strong>A shared yardstick.</strong> Friction gain Δμ, switching ratio and time, gain per added gram and per watt, and voltage, so the numbers in Fig 6 sit on one axis.</li>
+        <li><strong>An honest trade-off.</strong> When on-demand control is worth its pumps, heaters or high voltage, and when a passive surface is enough (Fig 7b).</li>
+        <li><strong>A new direction.</strong> Strain-triggered kirigami skins, switched on by the wearer's own finger flexion, as power-free friction modulation for the hand: the empty cells in Fig 4 and Fig 5.</li>
+        <li><strong>A test protocol.</strong> Standard benchmarks plus user outcomes (touch, comfort, safety) that today's studies rarely report.</li>
+      </ol>
+    </div>
+
+    <footer>
+      <p>Built from <code>review-landscape-visual-data.md</code> and <code>research-brief-abstract-intro.md</code>. All values come from paper abstracts found through Consensus (Oct–Nov 2026); check them against the full texts before publication.</p>
+    </footer>
+  </section>
+</div>
+<div id="tip" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+(function () {
+  "use strict";
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const tip = document.getElementById("tip");
+
+  function showTip(evt, lines, anchor) {
+    tip.replaceChildren();
+    lines.forEach((l, i) => { const d = document.createElement("div"); d.className = i === 0 ? "tv" : "tl"; d.textContent = l; tip.appendChild(d); });
+    tip.hidden = false;
+    let cx, cy;
+    if (evt && evt.clientX !== undefined && evt.type !== "focus") { cx = evt.clientX; cy = evt.clientY; }
+    else { const r = (anchor || evt.target).getBoundingClientRect(); cx = r.left + r.width / 2; cy = r.top; }
+    const r = tip.getBoundingClientRect(), pad = 14;
+    let x = cx + pad, y = cy + pad;
+    if (x + r.width > innerWidth - 8) x = cx - r.width - pad;
+    if (y + r.height > innerHeight - 8) y = cy - r.height - pad;
+    tip.style.left = Math.max(8, x) + "px"; tip.style.top = Math.max(8, y) + "px";
+  }
+  function hideTip() { tip.hidden = true; }
+  function bindTip(sel, fn) {
+    sel.attr("tabindex", 0)
+      .on("pointermove", function (e, d) { showTip(e, fn(d), this); })
+      .on("pointerleave", hideTip)
+      .on("focus", function (e, d) { showTip(e, fn(d), this); })
+      .on("blur", hideTip);
+  }
+  function bindCell(el, lines) {
+    el.tabIndex = 0;
+    el.addEventListener("pointermove", e => showTip(e, lines, el));
+    el.addEventListener("pointerleave", hideTip);
+    el.addEventListener("focus", e => showTip(e, lines, el));
+    el.addEventListener("blur", hideTip);
+  }
+  function svgFor(id, H) {
+    const el = document.getElementById(id); el.replaceChildren();
+    const W = Math.max(300, el.clientWidth);
+    const svg = d3.select(el).append("svg").attr("viewBox", `0 0 ${W} ${H}`).attr("width", "100%");
+    return { svg, W, H };
+  }
+  function tableInto(id, cols, rows) {
+    const host = document.getElementById(id); host.replaceChildren();
+    const t = document.createElement("table"); t.className = "data";
+    const tr = t.createTHead().insertRow(); cols.forEach(c => { const th = document.createElement("th"); th.textContent = c; tr.appendChild(th); });
+    const tb = t.createTBody(); rows.forEach(r => { const row = tb.insertRow(); r.forEach(v => { row.insertCell().textContent = v; }); });
+    host.appendChild(t);
+  }
+  const seq = t => d3.interpolateLab(css("--seq-lo"), css("--seq-hi"))(t);
+
+  /* ---------- Fig 1 waffle + age bars ---------- */
+  function drawWaffle() {
+    const el = document.getElementById("c-waffle");
+    const W = Math.max(260, Math.min(el.clientWidth, 420));
+    const gap = 4, n = 10, cell = (W - gap * (n - 1)) / n, H = W;
+    el.replaceChildren();
+    const svg = d3.select(el).append("svg").attr("viewBox", `0 0 ${W} ${H}`).attr("width", "100%").style("max-width", "420px");
+    const data = d3.range(100).map(i => ({ i, k: i < 40 ? "lo" : i < 50 ? "hi" : "rest" }));
+    const cells = svg.selectAll("rect").data(data).join("rect")
+      .attr("x", d => (d.i % n) * (cell + gap)).attr("y", d => Math.floor(d.i / n) * (cell + gap))
+      .attr("width", cell).attr("height", cell).attr("rx", 3)
+      .attr("fill", d => d.k === "rest" ? css("--seq0") : css("--s2"))
+      .attr("fill-opacity", d => d.k === "hi" ? 0.4 : 1)
+      .attr("stroke", d => d.k === "rest" ? css("--axis") : "none").attr("stroke-width", 1);
+    bindTip(cells, d => d.k === "lo" ? ["Chronic upper-limb impairment", "40% is the lower bound of the 40–50% range"]
+      : d.k === "hi" ? ["Within the 40–50% range", "Survivors 41–50: the upper bound"] : ["No chronic upper-limb impairment", "The other ≈50–60% of survivors"]);
+  }
+  function drawAge() {
+    const { svg, W } = svgFor("c-age", 112);
+    const data = [{ g: "Young adults", v: 1 }, { g: "Older adults", v: 2 }];
+    const m = { l: 104, r: 52, t: 22, b: 8 };
+    const x = d3.scaleLinear([0, 2], [m.l, W - m.r]);
+    const y = d3.scaleBand(data.map(d => d.g), [m.t, 112 - m.b]).padding(0.35);
+    svg.append("text").attr("x", 0).attr("y", 12).attr("fill", css("--fg")).attr("font-size", 13).attr("font-weight", 600).text("Grip force used to lift the same object");
+    svg.selectAll("text.lab").data(data).join("text").attr("class", "lab").attr("x", m.l - 8).attr("y", d => y(d.g) + y.bandwidth() / 2).attr("dy", "0.35em").attr("text-anchor", "end").attr("font-size", 13).attr("fill", css("--fg-2")).text(d => d.g);
+    const bars = svg.selectAll("rect").data(data).join("rect").attr("x", m.l).attr("y", d => y(d.g)).attr("height", y.bandwidth()).attr("width", d => x(d.v) - m.l).attr("rx", 3).attr("fill", css("--s1"));
+    svg.selectAll("text.val").data(data).join("text").attr("class", "val").attr("x", d => x(d.v) + 6).attr("y", d => y(d.g) + y.bandwidth() / 2).attr("dy", "0.35em").attr("font-size", 13).attr("font-weight", 600).attr("fill", css("--fg")).text(d => d.v === 1 ? "1×" : "≈2×");
+    svg.append("line").attr("x1", m.l).attr("x2", m.l).attr("y1", m.t - 4).attr("y2", 112 - m.b).attr("stroke", css("--axis"));
+    bindTip(bars, d => [d.v === 1 ? "1× (baseline)" : "≈2× the young-adult grip force", d.g + " · Cole 1991, precision-grip lift"]);
+  }
+
+  /* ---------- Fig 2 friction lever ---------- */
+  const leverF = mu => 0.5 * 9.81 / (2 * mu) * 1.3;
+  function drawLever() {
+    const el = document.getElementById("c-lever");
+    const W0 = Math.max(300, el.clientWidth), H = Math.round(Math.max(270, Math.min(400, W0 * 0.5)));
+    const { svg, W } = svgFor("c-lever", H);
+    const m = { t: 14, r: 14, b: 46, l: 46 };
+    const x = d3.scaleLinear([0.15, 2], [m.l, W - m.r]);
+    const y = d3.scaleLinear([0, 24], [H - m.b, m.t]);
+    const g = svg.append("g");
+    y.ticks(6).forEach(t => {
+      g.append("line").attr("x1", m.l).attr("x2", W - m.r).attr("y1", y(t)).attr("y2", y(t)).attr("stroke", t === 0 ? css("--axis") : css("--line"));
+      g.append("text").attr("x", m.l - 8).attr("y", y(t)).attr("dy", "0.35em").attr("text-anchor", "end").attr("font-size", 12).attr("fill", css("--muted")).style("font-variant-numeric", "tabular-nums").text(t);
+    });
+    x.ticks(W < 500 ? 5 : 10).forEach(t => g.append("text").attr("x", x(t)).attr("y", H - m.b + 18).attr("text-anchor", "middle").attr("font-size", 12).attr("fill", css("--muted")).text(t));
+    g.append("text").attr("x", (m.l + W - m.r) / 2).attr("y", H - 6).attr("text-anchor", "middle").attr("font-size", 12.5).attr("fill", css("--fg-2")).text("Friction coefficient at the contact, μ");
+    g.append("text").attr("transform", `translate(12,${(m.t + H - m.b) / 2}) rotate(-90)`).attr("text-anchor", "middle").attr("font-size", 12.5).attr("fill", css("--fg-2")).text("Squeeze per finger (N)");
+    // band of glove-supplied force
+    const band = g.append("rect").attr("x", m.l).attr("width", W - m.r - m.l).attr("y", y(20)).attr("height", y(15.8) - y(20)).attr("fill", css("--s1")).attr("fill-opacity", 0.1);
+    g.append("text").attr("x", W - m.r - 6).attr("y", y(20) + 15).attr("text-anchor", "end").attr("font-size", 12).attr("fill", css("--fg-2")).text("Force gloves supply 15.8–20 N");
+    bindTip(band, () => ["15.8–20 N", "Reported pinch / finger assistance: In 2015 (20 N), Popov 2017 (16 N), Suulker 2024 (15.8 N mean)"]);
+    g.append("line").attr("x1", m.l).attr("x2", W - m.r).attr("y1", y(2.34)).attr("y2", y(2.34)).attr("stroke", css("--fg-2")).attr("stroke-dasharray", "4 4");
+    g.append("text").attr("x", m.l + 6).attr("y", y(2.34) - 6).attr("font-size", 12).attr("fill", css("--fg-2")).text("Light pouch-motor glove: 2.34 N fingertip");
+    // curve
+    const pts = d3.range(0.15, 2.0001, 0.01).map(mu => [mu, leverF(mu)]);
+    g.append("path").attr("d", d3.line(d => x(d[0]), d => y(d[1]))(pts)).attr("fill", "none").attr("stroke", css("--s1")).attr("stroke-width", 2.5);
+    // annotations at 0.3 and 0.8
+    [[0.3, "μ 0.3 → 10.6 N"], [0.8, "μ 0.8 → 4.0 N (−62%)"]].forEach(([mu, lab], i) => {
+      const cx = x(mu), cy = y(leverF(mu));
+      g.append("line").attr("x1", cx).attr("x2", cx).attr("y1", cy).attr("y2", H - m.b).attr("stroke", css("--s2")).attr("stroke-dasharray", "2 3");
+      g.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 5.5).attr("fill", css("--s2")).attr("stroke", css("--panel")).attr("stroke-width", 2);
+      g.append("text").attr("x", cx + 9).attr("y", cy - (i ? 10 : 4)).attr("font-size", 12.5).attr("font-weight", 600).attr("fill", css("--fg")).text(lab);
+    });
+    // crosshair
+    const ch = g.append("g").style("display", "none");
+    ch.append("line").attr("y1", m.t).attr("y2", H - m.b).attr("stroke", css("--fg-2")).attr("stroke-width", 1);
+    const dot = ch.append("circle").attr("r", 4.5).attr("fill", css("--s1")).attr("stroke", css("--panel")).attr("stroke-width", 2);
+    svg.append("rect").attr("x", m.l).attr("y", m.t).attr("width", W - m.l - m.r).attr("height", H - m.t - m.b).attr("fill", "transparent").attr("tabindex", 0)
+      .on("pointermove", function (e) {
+        const mu = Math.max(0.15, Math.min(2, Math.round(x.invert(d3.pointer(e, svg.node())[0]) * 20) / 20));
+        ch.style("display", null); ch.select("line").attr("x1", x(mu)).attr("x2", x(mu)); dot.attr("cx", x(mu)).attr("cy", y(leverF(mu)));
+        showTip(e, [leverF(mu).toFixed(1) + " N per finger", "μ = " + mu.toFixed(2) + " · 0.5 kg object, 30% margin"]);
+      })
+      .on("pointerleave", () => { ch.style("display", "none"); hideTip(); })
+      .on("focus", function (e) { showTip(e, ["Hover along the curve", "Shows squeeze per finger at each μ"], this); })
+      .on("blur", hideTip);
+    tableInto("t-lever", ["μ", "Squeeze per finger (N)"], [0.2, 0.3, 0.5, 0.8, 1.0, 1.5, 2.0].map(mu => [mu.toFixed(1), leverF(mu).toFixed(1)]));
+  }
+
+  /* ---------- Fig 3 device mass ---------- */
+  const MASS = [
+    { d: "Motorized exo-glove", a: "force", g: 562, full: true, s: "Gerez 2019" },
+    { d: "SMA rehab glove", a: "force", g: 490, full: true, s: "Sui 2023" },
+    { d: "Exo-Glove Poly III", a: "force", g: 408, full: true, s: "Kim 2025" },
+    { d: "Portable exo glove", a: "force", g: 340, full: true, s: "Popov 2017" },
+    { d: "Body-powered exo-glove", a: "force", g: 335, full: true, s: "Gerez 2019" },
+    { d: "Spring-steel glove", a: "force", g: 196, full: true, s: "Chizhik 2021" },
+    { d: "Exo-Glove (glove only)", a: "force", g: 194, full: false, s: "In 2015" },
+    { d: "Tendon-jamming wrist", a: "fric", g: 184, full: true, s: "Choi 2020" },
+    { d: "Fabric pneumatic glove", a: "force", g: 73, full: false, s: "Chen 2025" },
+    { d: "Ionogel glove, untethered", a: "fric", g: 72, full: true, s: "Wang 2023" },
+    { d: "Gear-jamming wrist", a: "fric", g: 64, full: false, s: "Zuo 2022" },
+    { d: "So-EAGlove (haptic EA)", a: "fric", g: 51, full: true, s: "Xiong 2022" },
+    { d: "3D-printed soft glove", a: "force", g: 50, full: false, s: "Yi 2017", lt: true },
+    { d: "Ionogel glove, rheumatic", a: "fric", g: 47, full: true, s: "Wang 2025" }
+  ];
+  function drawMass() {
+    const el = document.getElementById("c-mass");
+    const Wc = Math.max(300, el.clientWidth), narrow = Wc < 560;
+    const rowH = 26, m = { t: 8, r: 54, b: 40, l: narrow ? 150 : 190 };
+    const H = m.t + m.b + MASS.length * rowH;
+    const { svg, W } = svgFor("c-mass", H);
+    const x = d3.scaleLinear([0, 600], [m.l, W - m.r]);
+    const y = d3.scaleBand(MASS.map(d => d.d), [m.t, H - m.b]).padding(0.2);
+    x.ticks(narrow ? 3 : 6).forEach(t => {
+      svg.append("line").attr("x1", x(t)).attr("x2", x(t)).attr("y1", m.t).attr("y2", H - m.b).attr("stroke", t === 0 ? css("--axis") : css("--line"));
+      svg.append("text").attr("x", x(t)).attr("y", H - m.b + 16).attr("text-anchor", "middle").attr("font-size", 12).attr("fill", css("--muted")).text(t);
+    });
+    svg.append("text").attr("x", (m.l + W - m.r) / 2).attr("y", H - 4).attr("text-anchor", "middle").attr("font-size", 12.5).attr("fill", css("--fg-2")).text("Reported mass (g)");
+    svg.append("rect").attr("x", x(335)).attr("width", x(562) - x(335)).attr("y", m.t).attr("height", H - m.b - m.t).attr("fill", css("--s1")).attr("fill-opacity", 0.07);
+    svg.selectAll("text.dn").data(MASS).join("text").attr("class", "dn").attr("x", m.l - 10).attr("y", d => y(d.d) + y.bandwidth() / 2).attr("dy", "0.35em").attr("text-anchor", "end").attr("font-size", narrow ? 11.5 : 12.5).attr("fill", css("--fg-2")).text(d => d.d);
+    svg.selectAll("line.st").data(MASS).join("line").attr("class", "st").attr("x1", x(0)).attr("x2", d => x(d.g)).attr("y1", d => y(d.d) + y.bandwidth() / 2).attr("y2", d => y(d.d) + y.bandwidth() / 2).attr("stroke", css("--line")).attr("stroke-width", 2);
+    const col = d => d.a === "force" ? css("--s1") : css("--s2");
+    const dots = svg.selectAll("circle").data(MASS).join("circle").attr("cx", d => x(d.g)).attr("cy", d => y(d.d) + y.bandwidth() / 2).attr("r", 6)
+      .attr("fill", d => d.full ? col(d) : css("--panel")).attr("stroke", col).attr("stroke-width", 2);
+    svg.selectAll("text.v").data(MASS).join("text").attr("class", "v").attr("x", d => x(d.g) + 11).attr("y", d => y(d.d) + y.bandwidth() / 2).attr("dy", "0.35em").attr("font-size", 12).attr("font-weight", 600).attr("fill", css("--fg")).text(d => (d.lt ? "<" : "") + d.g + " g");
+    bindTip(dots, d => [(d.lt ? "<" : "") + d.g + " g", d.d + " · " + d.s, d.full ? "Complete system or device as reported" : "Partial: actuation, pump or pack not included"]);
+    tableInto("t-mass", ["Device", "Approach", "Mass (g)", "Basis", "Source"], MASS.map(d => [d.d, d.a === "force" ? "Force-actuated" : "Friction / adhesion / stiffness", (d.lt ? "<" : "") + d.g, d.full ? "Full" : "Partial", d.s]));
+  }
+
+  /* ---------- Fig 4 coverage heatmap ---------- */
+  const MECH = ["Electroadhesion", "Adhesion (dry + responsive)", "Suction", "Jamming", "Kirigami"];
+  const CTX = [["Robot gripper", ""], ["Robot locomotion", "crawling, climbing"], ["Haptic wearable", "VR, teleoperation"], ["Hand grasp-assist", "review focus"], ["Other body-worn", "wrist, shoe, climbing, skin"]];
+  const COVER = [[9, 0, 4, 1, 0], [12, 1, 0, 3, 2], [13, 1, 1, 2, 2], [10, 0, 3, 3, 3], [8, 7, 0, 0, 1]];
+  function drawCover() {
+    const t = document.getElementById("m-cover"); t.replaceChildren();
+    const hr = t.createTHead().insertRow(); hr.appendChild(document.createElement("th"));
+    CTX.forEach(([c, s], j) => { const th = document.createElement("th"); th.textContent = c; if (s) { const sp = document.createElement("span"); sp.className = "sub"; sp.textContent = s; th.appendChild(sp); } if (j === 3) th.className = "hl"; th.scope = "col"; hr.appendChild(th); });
+    const tb = t.createTBody();
+    MECH.forEach((mname, i) => {
+      const r = tb.insertRow(); const th = document.createElement("th"); th.className = "row"; th.scope = "row"; th.textContent = mname; r.appendChild(th);
+      COVER[i].forEach((v, j) => {
+        const td = r.insertCell(); const bg = v === 0 ? css("--seq0") : seq((v - 1) / 12);
+        td.style.background = bg; td.style.color = v === 0 ? css("--muted") : (d3.lab(bg).l > 58 ? "#13171b" : "#ffffff");
+        td.textContent = v; if (j === 3) td.classList.add("hl");
+        bindCell(td, [v + (v === 1 ? " paper" : " papers"), mname + " · " + CTX[j][0], j === 3 && v === 0 ? "No hand grasp-assist study found" : "Count from our search sample"]);
+      });
+    });
+  }
+
+  /* ---------- Fig 5 timeline ---------- */
+  const TL = {
+    "Electroadhesion": { r: [2015, 2018, 2018, 2019, 2020, 2021, 2021, 2023, 2025], o: [2018, 2022, 2022, 2023], h: [2024], lag: "robot → hand glove: 9 y" },
+    "Adhesion": { r: [2018, 2018, 2018, 2019, 2020, 2021, 2021, 2022, 2025, 2025, 2026], o: [2015, 2021], h: [2023, 2025, 2026], lag: "robot → hand glove: 5 y" },
+    "Suction": { r: [2019, 2019, 2022, 2023, 2023, 2023, 2024, 2025, 2025, 2026, 2026], o: [2023], h: [2022, 2024], lag: "robot → hand glove: 3 y" },
+    "Jamming": { r: [2016, 2018, 2019, 2021, 2021, 2023, 2023, 2024, 2025, 2025], o: [2016, 2020, 2021, 2021, 2022, 2023], h: [2020, 2023, 2026], lag: "robot → hand glove: 4 y" },
+    "Kirigami": { r: [2018, 2019, 2020, 2021, 2022, 2022, 2023, 2023, 2024, 2024, 2024, 2024, 2025, 2025, 2026], o: [2020], h: [], lag: "no hand glove yet" }
+  };
+  function drawTime() {
+    const el = document.getElementById("c-time");
+    const Wc = Math.max(300, el.clientWidth), narrow = Wc < 560;
+    const lane = 104, m = { t: 6, r: 12, b: 30, l: narrow ? 112 : 160 };
+    const names = Object.keys(TL), H = m.t + m.b + names.length * lane;
+    const { svg, W } = svgFor("c-time", H);
+    const x = d3.scaleLinear([2014.5, 2026.5], [m.l, W - m.r]);
+    const step = 9, r = 4;
+    d3.range(2015, 2027).forEach(yr => {
+      svg.append("line").attr("x1", x(yr)).attr("x2", x(yr)).attr("y1", m.t).attr("y2", H - m.b).attr("stroke", css("--line"));
+      if (!narrow || yr % 2 === 1) svg.append("text").attr("x", x(yr)).attr("y", H - m.b + 18).attr("text-anchor", "middle").attr("font-size", 12).attr("fill", css("--muted")).text(narrow ? "'" + String(yr).slice(2) : yr);
+    });
+    const all = [];
+    names.forEach((n, i) => {
+      const mid = m.t + i * lane + lane / 2;
+      if (i > 0) svg.append("line").attr("x1", 0).attr("x2", W).attr("y1", m.t + i * lane).attr("y2", m.t + i * lane).attr("stroke", css("--axis"));
+      svg.append("line").attr("x1", m.l).attr("x2", W - m.r).attr("y1", mid).attr("y2", mid).attr("stroke", css("--axis")).attr("stroke-dasharray", "1 3");
+      svg.append("text").attr("x", 0).attr("y", mid - 6).attr("font-size", narrow ? 12.5 : 13.5).attr("font-weight", 600).attr("fill", css("--fg")).text(n);
+      svg.append("text").attr("x", 0).attr("y", mid + 12).attr("font-size", 11.5).attr("fill", css("--fg-2")).text(TL[n].lag);
+      const cnt = {};
+      TL[n].r.forEach(yr => { const k = "r" + yr; cnt[k] = (cnt[k] || 0) + 1; all.push({ n, yr, t: "r", cx: x(yr), cy: mid - 8 - (cnt[k] - 1) * step }); });
+      const below = [...TL[n].h.map(yr => ({ yr, t: "h" })), ...TL[n].o.map(yr => ({ yr, t: "o" }))];
+      below.forEach(b => { const k = "b" + b.yr; cnt[k] = (cnt[k] || 0) + 1; all.push({ n, yr: b.yr, t: b.t, cx: x(b.yr), cy: mid + 8 + (cnt[k] - 1) * step }); });
+    });
+    const label = { r: "Robot gripper or locomotion", o: "Other human-worn device", h: "Hand grasp-assist wearable" };
+    const dots = svg.selectAll("circle").data(all).join("circle").attr("cx", d => d.cx).attr("cy", d => d.cy).attr("r", r)
+      .attr("fill", d => d.t === "r" ? css("--s1") : d.t === "h" ? css("--s2") : css("--panel"))
+      .attr("stroke", d => d.t === "o" ? css("--s2") : css("--panel")).attr("stroke-width", d => d.t === "o" ? 1.8 : 1);
+    bindTip(dots, d => {
+      const same = all.filter(a => a.n === d.n && a.yr === d.yr && a.t === d.t).length;
+      return [same + (same === 1 ? " paper" : " papers") + " in " + d.yr, d.n + " · " + label[d.t]];
+    });
+    const rows = [];
+    names.forEach(n => { const g = TL[n]; rows.push([n, g.r.length, g.o.length, g.h.length, g.h.length ? Math.min(...g.h) : "none", Math.min(...g.r)]); });
+    tableInto("t-time", ["Mechanism", "Robot papers", "Other human-worn", "Hand grasp-assist", "First hand grasp-assist", "First robot"], rows);
+  }
+
+  /* ---------- Fig 6 metric fragmentation ---------- */
+  const METRIC = [
+    { grp: "Friction-coefficient ratio" },
+    { lab: "Kirigami · Branyan 2020", v: [3.3], k: true, txt: "×3.3", note: "COF ratio, snake-skin kirigami" },
+    { lab: "Kirigami · Branyan 2022", v: [4], k: true, txt: "×4", note: "Lateral/cranial anisotropy >4" },
+    { lab: "Kirigami · Liefferink 2021", v: [10], k: true, txt: "×10", note: "μ tunable by more than 10×" },
+    { grp: "Force or holding gain" },
+    { lab: "Suction · Mazzolai 2019", v: [1.4, 2.4, 12.5], txt: "×1.4 / 2.4 / 12.5", note: "Grasp force in air / water / oil" },
+    { lab: "Electroadhesion · Chen 2019", v: [1.65], txt: "×1.65", note: "+65% weight held at 4 kV" },
+    { lab: "Soft glove · Lai 2023", v: [2.5], txt: "×2.5", note: "Grasp friction 8.4 → 21.3 N" },
+    { grp: "On/off switching ratio" },
+    { lab: "Adhesion (thermo) · Wang 2023", v: [4.9], txt: "×4.9", note: "Ionogel glove, 4 V, 4.4 s" },
+    { lab: "Adhesion (thermo) · Wang 2025", v: [5.1], txt: "×5.1", note: "35 vs 6.8 kPa" },
+    { lab: "Adhesion (thermo) · Zhu 2026", v: [26.5], txt: "×26.5", note: "143.5 vs 5.4 kPa" },
+    { lab: "Adhesion (dry) · Tian 2019", v: [20], txt: "×20", note: "Pressure-switched gecko gripper" },
+    { lab: "Adhesion (dry) · Li 2021", v: [54], txt: "×54", note: "Composite design, <0.2 s" },
+    { lab: "Adhesion (SMP) · Luo 2022", v: [115, 2000], txt: "×115 / 2000", note: "Flat / curved substrate" },
+    { lab: "Suction · He 2026", v: [270], txt: "×270", note: "Passive cups, stress difference" },
+    { lab: "Suction · Frey 2022", v: [450], txt: "×450", note: "Octopus skin glove, <50 ms" },
+    { grp: "Stiffness ratio" },
+    { lab: "Jamming · Wei 2016", v: [10], txt: "×10", note: "Particle jamming finger" },
+    { lab: "EA + jamming · Chen 2021", v: [23], txt: "×23", note: "2200% stiffness change" },
+    { lab: "Jamming · Zuo 2022", v: [29], txt: "×29", note: "Gear jamming, 64 g wrist" },
+    { lab: "Jamming · Gao 2019", v: [180], txt: "×180", note: "Layer jamming finger" },
+    { grp: "Geometry-dependent adhesion" },
+    { lab: "Electroadhesion · Cacucciolo 2021", v: [1000], txt: "×1000", note: "Peel force <1 mN → >1 N with angle" },
+    { grp: "Not quantified" },
+    { lab: "Electroadhesion · Rosle 2024", v: [], txt: "no number in abstract", note: "The only EA grasp-glove study" }
+  ];
+  function drawMetric() {
+    const el = document.getElementById("c-metric");
+    const Wc = Math.max(300, el.clientWidth), narrow = Wc < 600;
+    const rowH = 23, m = { t: 22, r: narrow ? 74 : 120, b: 30, l: narrow ? 168 : 230 };
+    const H = m.t + m.b + METRIC.length * rowH;
+    const { svg, W } = svgFor("c-metric", H);
+    const x = d3.scaleLog([1, 3000], [m.l, W - m.r]);
+    [1, 10, 100, 1000].forEach(t => {
+      svg.append("line").attr("x1", x(t)).attr("x2", x(t)).attr("y1", m.t).attr("y2", H - m.b).attr("stroke", t === 1 ? css("--axis") : css("--line"));
+      svg.append("text").attr("x", x(t)).attr("y", H - m.b + 16).attr("text-anchor", "middle").attr("font-size", 12).attr("fill", css("--muted")).text("×" + t);
+    });
+    svg.append("text").attr("x", W - m.r).attr("y", 12).attr("text-anchor", "end").attr("font-size", 12).attr("fill", css("--fg-2")).text("Reported ratio (log scale) →");
+    METRIC.forEach((d, i) => {
+      const cy = m.t + i * rowH + rowH / 2;
+      if (d.grp) {
+        svg.append("text").attr("x", 0).attr("y", cy + 3).attr("font-size", 12).attr("font-weight", 600).attr("letter-spacing", "0.04em").attr("fill", css("--fg")).text(d.grp.toUpperCase());
+        svg.append("line").attr("x1", 0).attr("x2", W).attr("y1", cy + 9).attr("y2", cy + 9).attr("stroke", css("--line"));
+        return;
+      }
+      svg.append("text").attr("x", m.l - 10).attr("y", cy).attr("dy", "0.35em").attr("text-anchor", "end").attr("font-size", narrow ? 11 : 12).attr("fill", css("--fg-2")).text(d.lab);
+      if (!d.v.length) { svg.append("text").attr("x", m.l + 6).attr("y", cy).attr("dy", "0.35em").attr("font-size", 12).attr("font-style", "italic").attr("fill", css("--muted")).text("no number in abstract"); return; }
+      svg.append("line").attr("x1", x(d3.min(d.v))).attr("x2", x(d3.max(d.v))).attr("y1", cy).attr("y2", cy).attr("stroke", d.k ? css("--s2") : css("--s1")).attr("stroke-width", 1.5).attr("stroke-opacity", 0.5);
+      const c = svg.selectAll(null).data(d.v.map(v => ({ v, d }))).join("circle").attr("cx", o => x(o.v)).attr("cy", cy).attr("r", 5.5).attr("fill", d.k ? css("--s2") : css("--s1")).attr("stroke", css("--panel")).attr("stroke-width", 2);
+      bindTip(c, o => ["×" + o.v, o.d.lab, o.d.note]);
+      svg.append("text").attr("x", x(d3.max(d.v)) + 10).attr("y", cy).attr("dy", "0.35em").attr("font-size", 12).attr("font-weight", 600).attr("fill", css("--fg")).text(d.txt);
+    });
+    let grp = "";
+    tableInto("t-metric", ["Metric type", "Study", "Ratio", "What was measured"], METRIC.filter(d => { if (d.grp) { grp = d.grp; return false; } d._g = grp; return true; }).map(d => [d._g, d.lab, d.v.length ? d.txt : "—", d.note]));
+  }
+
+  /* ---------- Fig 7a scorecard ---------- */
+  const CRIT = ["Power-free", "Low added hardware", "On-demand switching", "Surface generality", "Skin / electrical safety", "Preserves touch", "Evidence on the hand"];
+  const SCORE = [
+    { m: "Suction (active)", s: [1, 1, 3, 2, 3, 1, 2], why: "Pump or thermal actuation; passive cups emerging. Strong on wet and smooth surfaces, weak on porous ones. Cups are bulky on the fingerpad." },
+    { m: "Jamming", s: [1, 1, 3, 2, 3, 1, 2], why: "Needs vacuum (positive-pressure variants exist). Tunes stiffness rather than surface friction, and stiffens the hand." },
+    { m: "Adhesion: dry (gecko)", s: [3, 3, 2, 1, 3, 2, 1], why: "Power-free and switched by shear or peel. Weak on rough, dirty or fouled surfaces. Human use shown only for climbing." },
+    { m: "Adhesion: responsive", s: [1, 2, 2, 2, 2, 2, 3], why: "4 V heaters at 45 °C, about 4 s to switch. Works on many materials (≈35 kPa). The only mechanism tested with patients." },
+    { m: "Electroadhesion", s: [2, 2, 3, 2, 1, 3, 1], why: "mW power but 100s of V to kV; ±7.5 V ionoelastomer designs are emerging. Thin pads keep touch. One grasp-glove study." },
+    { m: "Kirigami", s: [3, 3, 2, 2, 3, 0, 0], why: "Passive and strain-triggered; works on ice and rough ground in shoe soles. Effect on touch and use on the hand are untested." }
+  ];
+  const WORD = ["no evidence", "weak", "moderate", "strong"];
+  function drawScore() {
+    const t = document.getElementById("m-score"); t.replaceChildren();
+    const hr = t.createTHead().insertRow(); hr.appendChild(document.createElement("th"));
+    CRIT.forEach(c => { const th = document.createElement("th"); th.scope = "col"; th.textContent = c; hr.appendChild(th); });
+    const tb = t.createTBody();
+    SCORE.forEach(row => {
+      const r = tb.insertRow(); const th = document.createElement("th"); th.className = "row"; th.scope = "row"; th.textContent = row.m; r.appendChild(th);
+      row.s.forEach((v, j) => {
+        const td = r.insertCell();
+        if (v === 0) { td.style.backgroundColor = css("--seq0"); td.classList.add("unk"); td.style.color = css("--fg-2"); td.textContent = "?"; }
+        else { const bg = seq((v - 1) / 2); td.style.background = bg; td.style.color = d3.lab(bg).l > 58 ? "#13171b" : "#ffffff"; td.textContent = v; }
+        bindCell(td, [(v ? v + " / 3 · " : "") + WORD[v], row.m + " · " + CRIT[j], row.why]);
+      });
+    });
+  }
+
+  /* ---------- Fig 7b positioning map ---------- */
+  const MAP = SCORE.map(r => ({ m: r.m, bx: 3 - (r.s[0] + r.s[1]) / 2, cy: r.s[2] }));
+  const NUDGE = { "Suction (active)": [-0.09, 0.08, "end", -12, -6], "Jamming": [0.09, -0.08, "start", 12, 14], "Adhesion: dry (gecko)": [-0.12, 0.1, "start", 12, 14], "Kirigami": [0.14, 0.38, "start", 12, -2], "Adhesion: responsive": [0, 0, "start", 12, 4], "Electroadhesion": [0, 0, "start", 12, -8] };
+  function drawMap() {
+    const el = document.getElementById("c-map");
+    const W0 = Math.max(300, el.clientWidth), H = Math.round(Math.max(300, Math.min(440, W0 * 0.55)));
+    const { svg, W } = svgFor("c-map", H);
+    const m = { t: 16, r: 20, b: 48, l: 52 };
+    const x = d3.scaleLinear([-0.35, 3], [m.l, W - m.r]);
+    const y = d3.scaleLinear([0.8, 3.6], [H - m.b, m.t]);
+    svg.append("rect").attr("x", x(-0.35)).attr("y", y(3.6)).attr("width", x(1) - x(-0.35)).attr("height", y(1.9) - y(3.6)).attr("fill", css("--zone")).attr("stroke", css("--zone-line")).attr("stroke-dasharray", "4 3");
+    svg.append("text").attr("x", x(-0.3)).attr("y", y(3.6) + 16).attr("font-size", 12).attr("font-weight", 600).attr("fill", css("--fg")).text("Target: bulk-free + controllable");
+    [1, 2, 3].forEach(t => {
+      svg.append("line").attr("x1", m.l).attr("x2", W - m.r).attr("y1", y(t)).attr("y2", y(t)).attr("stroke", css("--line"));
+      svg.append("text").attr("x", m.l - 8).attr("y", y(t)).attr("dy", "0.35em").attr("text-anchor", "end").attr("font-size", 12).attr("fill", css("--muted")).text(t);
+    });
+    [0, 1, 2, 3].forEach(t => svg.append("text").attr("x", x(t)).attr("y", H - m.b + 18).attr("text-anchor", "middle").attr("font-size", 12).attr("fill", css("--muted")).text(t));
+    svg.append("line").attr("x1", m.l).attr("x2", W - m.r).attr("y1", H - m.b).attr("y2", H - m.b).attr("stroke", css("--axis"));
+    svg.append("text").attr("x", (m.l + W - m.r) / 2).attr("y", H - 8).attr("text-anchor", "middle").attr("font-size", 12.5).attr("fill", css("--fg-2")).text("Hardware burden (power + added mass) →");
+    svg.append("text").attr("transform", `translate(14,${(m.t + H - m.b) / 2}) rotate(-90)`).attr("text-anchor", "middle").attr("font-size", 12.5).attr("fill", css("--fg-2")).text("Controllability →");
+    const pts = MAP.map(p => { const n = NUDGE[p.m]; return { ...p, px: x(p.bx + n[0]), py: y(p.cy + n[1]), anc: n[2], dx: n[3], dy: n[4] }; });
+    const dots = svg.selectAll("circle").data(pts).join("circle").attr("cx", d => d.px).attr("cy", d => d.py).attr("r", 7)
+      .attr("fill", d => d.m === "Kirigami" ? css("--s2") : css("--s1")).attr("stroke", css("--panel")).attr("stroke-width", 2);
+    svg.selectAll("text.pl").data(pts).join("text").attr("class", "pl").attr("x", d => d.px + d.dx).attr("y", d => d.py + d.dy).attr("text-anchor", d => d.anc).attr("dy", "0.35em").attr("font-size", 12.5).attr("font-weight", 600).attr("fill", css("--fg")).text(d => d.m);
+    bindTip(dots, d => ["Burden " + d.bx.toFixed(1) + " · control " + d.cy, d.m]);
+    tableInto("t-map", ["Mechanism", "Hardware burden (0–3)", "Controllability (1–3)"], MAP.map(p => [p.m, p.bx.toFixed(1), p.cy]));
+  }
+
+  /* ---------- Fig 8 gap x contribution ---------- */
+  const GAPS = [
+    ["G1", "No cross-mechanism review for wearables"],
+    ["G2", "Active methods add bulk and power back"],
+    ["G3", "Kirigami absent from hand wearables"],
+    ["G4", "No common performance metrics"],
+    ["G5", "User effects (touch, comfort, safety) rarely tested"]
+  ];
+  const CONTRIB = [["C1", "Taxonomy", "passive/active by contact physics"], ["C2", "Benchmark", "wearable-criteria table"], ["C3", "Metrics", "Δμ, switching, per g, per W"], ["C4", "Trade-off", "the bulk-free analysis"], ["C5", "Kirigami", "opportunity analysis"], ["C6", "Roadmap", "test protocol, hybrids"]];
+  const GM = [[2, 2, 1, 1, 0, 0], [1, 2, 1, 2, 1, 0], [1, 0, 0, 1, 2, 1], [0, 1, 2, 0, 0, 2], [0, 2, 1, 0, 1, 2]];
+  function drawGap() {
+    const t = document.getElementById("m-gap"); t.replaceChildren();
+    const hr = t.createTHead().insertRow(); hr.appendChild(document.createElement("th"));
+    CONTRIB.forEach(([id, n, s]) => { const th = document.createElement("th"); th.scope = "col"; th.textContent = id + " " + n; const sp = document.createElement("span"); sp.className = "sub"; sp.textContent = s; th.appendChild(sp); hr.appendChild(th); });
+    const tb = t.createTBody();
+    GAPS.forEach(([gid, gtxt], i) => {
+      const r = tb.insertRow(); const th = document.createElement("th"); th.className = "row"; th.scope = "row"; th.style.whiteSpace = "normal"; th.style.minWidth = "150px";
+      th.textContent = gid + " "; const sp = document.createElement("span"); sp.className = "sub"; sp.textContent = gtxt; th.appendChild(sp); r.appendChild(th);
+      GM[i].forEach((v, j) => {
+        const td = r.insertCell();
+        if (v === 2) { const bg = seq(1); td.style.background = bg; td.style.color = d3.lab(bg).l > 58 ? "#13171b" : "#ffffff"; }
+        else if (v === 1) { td.style.background = seq(0); td.style.color = d3.lab(seq(0)).l > 58 ? "#13171b" : "#ffffff"; }
+        else { td.style.background = css("--seq0"); }
+        const s = document.createElement("span"); s.className = "mk"; s.textContent = v === 2 ? "●" : v === 1 ? "○" : ""; td.appendChild(s);
+        bindCell(td, [v === 2 ? "Primary answer" : v === 1 ? "Supporting" : "Not addressed here", gid + " " + gtxt, "by " + CONTRIB[j][0] + " " + CONTRIB[j][1] + " (" + CONTRIB[j][2] + ")"]);
+      });
+    });
+  }
+
+  function renderAll() {
+    if (!window.d3) return;
+    hideTip();
+    drawWaffle(); drawAge(); drawLever(); drawMass(); drawCover(); drawTime(); drawMetric(); drawScore(); drawMap(); drawGap();
+  }
+  let rt, lastW = 0;
+  const later = entries => {
+    const w = Math.round(entries[0].contentRect.width);
+    if (w === lastW) return;
+    lastW = w; clearTimeout(rt); rt = setTimeout(renderAll, 120);
+  };
+  renderAll();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(renderAll);
+  new ResizeObserver(later).observe(document.querySelector(".wrap"));
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderAll);
+  new MutationObserver(renderAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  window.addEventListener("scroll", hideTip, { passive: true });
+})();
+</script>
